@@ -52,14 +52,29 @@ const Game = {
     update(dt) {
         Player.update(dt);
         AI.update(dt);
+        this.checkCollisions();
         UI.update();
+    },
+
+    checkCollisions() {
+        const seg = Track.findSegment(Player.z);
+        if (seg.cars.length > 0) {
+            seg.cars.forEach(car => {
+                // Simplified collision check
+                if (Math.abs(Player.x - car.x) < 0.4) {
+                    // HIT!
+                    Player.speed = 0;
+                    Player.z -= 100; // Bounce back
+                }
+            });
+        }
     },
 
     render() {
         const ctx = Engine.ctx;
         ctx.clearRect(0, 0, Engine.width, Engine.height);
 
-        Engine.renderBackground(0); // Parallax offset here
+        Engine.renderBackground(Player.z / 10); // Parallax offset based on distance
 
         const baseSegment = Track.findSegment(Player.z);
         const percent = Utils.percentRemaining(Player.z, Engine.segmentLength);
@@ -127,9 +142,9 @@ const Game = {
 
         const scale = Engine.cameraDepth / Engine.cameraHeight;
         const destW = (scale * 2000 * (width / 2)) * 0.3; // Car width
-        const destH = destW * 0.6; // Car height
+        const destH = destW * 1.1; // Car height (increased to avoid squashing)
         const destX = width / 2 - (destW / 2);
-        const destY = height - destH - 40;
+        const destY = height - destH - 10;
 
         const carImg = Assets.getImage('car');
         if (carImg) {

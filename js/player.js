@@ -66,9 +66,19 @@ const Player = {
             this.speed += this.decel;
         }
 
-        // Limit speed to gear max
-        if (this.speed > currentMaxSpeed && !this.nitroActive) {
-            this.speed += this.decel; // Natural slowdown if over gear limit
+        // Apply Nitro boost directly
+        if (this.nitroActive) {
+            this.speed += 200;
+        }
+
+        // Limit speed to gear max (unless nitro is active)
+        if (this.speed > currentMaxSpeed) {
+            this.speed = currentMaxSpeed;
+        }
+
+        // Natural decel if speed > gear limit (and no nitro)
+        if (!this.nitroActive && this.speed > gearMaxSpeed) {
+            this.speed += this.decel * 2;
         }
 
         // Off-road penalty

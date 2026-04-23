@@ -12,7 +12,7 @@ const AI = {
             this.opponents.push({
                 index: i,
                 x: (Math.random() * 2) - 1,
-                z: 500 + (i * 2000),
+                z: 500 + (i * 1200),
                 speed: 8000 + (Math.random() * 2000),
                 color: `hsl(${Math.random() * 360}, 70%, 50%)`
             });
