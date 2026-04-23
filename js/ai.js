@@ -20,7 +20,21 @@ const AI = {
     },
 
     update(dt) {
-        // AI logic will be added here
+        // Clear previous segment assignments
+        Track.segments.forEach(s => s.cars = []);
+
+        this.opponents.forEach(car => {
+            car.z += car.speed * dt;
+            if (car.z >= Track.trackLength) car.z -= Track.trackLength;
+
+            // Assign to segment
+            const segment = Track.findSegment(car.z);
+            segment.cars.push(car);
+
+            // Simple lane keeping
+            car.x += (Math.random() - 0.5) * 0.01;
+            car.x = Utils.limit(car.x, -0.8, 0.8);
+        });
     }
 };
 

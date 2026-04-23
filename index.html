@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,10 @@
     <meta name="description" content="Um jogo de corrida arcade inspirado no clássico Top Gear (SNES).">
     <link rel="stylesheet" href="css/style.css">
     <!-- Google Fonts for Retro Aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div id="game-container">
         <!-- Main Menu -->
@@ -18,12 +21,18 @@
                 <button id="start-btn" class="retro-btn">START RACE</button>
                 <div class="settings">
                     <p>Gear Type:</p>
-                    <label>
-                        <input type="radio" name="gear" value="auto" checked> Automatic
-                    </label>
-                    <label>
-                        <input type="radio" name="gear" value="manual"> Manual
-                    </label>
+                    <div class="gear-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="gear" value="auto" checked> Automatic
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="gear" value="manual"> Manual
+                        </label>
+                    </div>
+                </div>
+                <div class="controls-info">
+                    <p>Keys: WASD / Arrows</p>
+                    <p>Space: Nitro | Shift/Ctrl: Gears (Manual)</p>
                 </div>
             </div>
         </div>
@@ -47,7 +56,7 @@
                         <div id="speed-val">0</div>
                     </div>
                 </div>
-                
+
                 <div class="center-hud">
                     <div id="nitro-container">
                         <div class="nitro-indicator" id="nitro-1"></div>
@@ -63,15 +72,16 @@
                     </div>
                 </div>
 
-                <div class="dial-container">
+                <div class="dial-container gear-container">
                     <div class="dial" id="rpm-dial">
+                        <div class="label">GEAR</div>
+                        <div id="gear-val" class="big-gear">1</div>
                         <div class="label">RPM</div>
-                        <div id="gear-val">1</div>
                         <div id="rpm-level"></div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Track Map -->
             <div id="mini-map">
                 <canvas id="mapCanvas"></canvas>
@@ -94,4 +104,5 @@
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>

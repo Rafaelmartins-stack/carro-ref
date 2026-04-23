@@ -17,7 +17,10 @@ const Game = {
         UI.init();
 
         Assets.load({
-            'car': 'assets/car.png'
+            'car': 'assets/car_straight.png',
+            'car_left': 'assets/car_left.png',
+            'car_right': 'assets/car_right.png',
+            'car_ai': 'assets/car_ai.png'
         }, () => {
             console.log("Assets Loaded");
         });
@@ -51,7 +54,7 @@ const Game = {
 
     update(dt) {
         Player.update(dt);
-        // AI update would go here
+        AI.update(dt);
         UI.update();
     },
 
@@ -87,11 +90,30 @@ const Game = {
                 continue;
 
             Engine.renderSegment(segment);
+
+            // Render entities on this segment
+            this.renderEntities(segment);
+
             maxY = segment.p2.screen.y;
         }
 
         // Render Player Car (Simplified sprite for now)
         this.renderPlayer();
+    },
+
+    renderEntities(segment) {
+        const aiImg = Assets.getImage('car_ai');
+        if (!aiImg) return;
+
+        segment.cars.forEach(car => {
+            const scale = segment.p1.screen.scale;
+            const destW = (scale * 2000 * (Engine.width / 2)) * 0.3;
+            const destH = destW * 0.6;
+            const destX = segment.p1.screen.x + (scale * car.x * Engine.roadWidth * Engine.width / 2) - (destW / 2);
+            const destY = segment.p1.screen.y - destH;
+
+            Engine.ctx.drawImage(aiImg, destX, destY, destW, destH);
+        });
     },
 
     renderPlayer() {
@@ -105,9 +127,14 @@ const Game = {
         const destX = width / 2 - (destW / 2);
         const destY = height - destH - 40;
 
-        const carImg = Assets.getImage('car');
+        // Sprite Selection based on rotation
+        let spriteName = 'car';
+        if (Player.rotation < -0.05) spriteName = 'car_left';
+        if (Player.rotation > 0.05) spriteName = 'car_right';
+
+        const carImg = Assets.getImage(spriteName);
         if (carImg) {
-            ctx.drawImage(carImg, destX + (Player.rotation * 100), destY, destW, destH);
+            ctx.drawImage(carImg, destX, destY, destW, destH);
         } else {
             ctx.fillStyle = '#ff0055';
             ctx.fillRect(destX, destY, destW, destH);

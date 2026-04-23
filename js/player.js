@@ -51,13 +51,24 @@ const Player = {
     },
 
     update(dt) {
+        // Max speed depends on gear
+        const gearMaxSpeed = this.gear * 3000;
+        const currentMaxSpeed = this.nitroActive ? this.maxSpeed + 3000 : gearMaxSpeed;
+
         // Accelerate / Brake
         if (this.keys['ArrowUp'] || this.keys['KeyW']) {
-            this.speed += this.accel;
+            // Acceleration is better in lower gears
+            const gearAccel = this.accel * (1.2 - (this.gear / 10));
+            this.speed += gearAccel;
         } else if (this.keys['ArrowDown'] || this.keys['KeyS']) {
             this.speed += this.breaking;
         } else {
             this.speed += this.decel;
+        }
+
+        // Limit speed to gear max
+        if (this.speed > currentMaxSpeed && !this.nitroActive) {
+            this.speed += this.decel; // Natural slowdown if over gear limit
         }
 
         // Off-road penalty
@@ -89,9 +100,20 @@ const Player = {
             if (this.nitroDuration <= 0) this.nitroActive = false;
         }
 
-        // Manual Gears (Shift/Ctrl)
+        // Gears
         if (this.isManual) {
-            // Logic for manual gear switching would go here
+            // Manual Gear Switching (Shift up, Ctrl down)
+            if (this.keys['ShiftLeft'] && !this.gearShiftPressed) {
+                if (this.gear < this.maxGears) this.gear++;
+                this.gearShiftPressed = true;
+            } else if (this.keys['ControlLeft'] && !this.gearShiftPressed) {
+                if (this.gear > 1) this.gear--;
+                this.gearShiftPressed = true;
+            }
+
+            if (!this.keys['ShiftLeft'] && !this.keys['ControlLeft']) {
+                this.gearShiftPressed = false;
+            }
         } else {
             // Simple Auto-gear logic
             this.gear = Math.floor(this.speed / 3000) + 1;

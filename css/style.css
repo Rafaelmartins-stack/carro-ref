@@ -86,33 +86,70 @@ h1 {
     background: var(--primary);
     color: white;
     font-family: var(--retro-font);
-    border: none;
-    padding: 1rem 2.5rem;
-    font-size: 1.2rem;
+    border: 3px solid white;
+    padding: 1.2rem 3rem;
+    font-size: 1.4rem;
     cursor: pointer;
     clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin-bottom: 2rem;
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
 }
 
 .retro-btn:hover {
     background: var(--secondary);
-    transform: scale(1.05);
+    transform: scale(1.1) rotate(-1deg);
     color: #000;
+    box-shadow: 0 0 30px var(--secondary);
+    border-color: #000;
 }
 
 .settings {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1rem;
-    border-radius: 4px;
-    border-left: 4px solid var(--secondary);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid var(--secondary);
+    box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.2);
 }
 
 .settings p {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     text-transform: uppercase;
     font-weight: bold;
     color: var(--secondary);
+    font-family: var(--retro-font);
+    font-size: 0.8rem;
+}
+
+.gear-selector {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.radio-label {
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-label input {
+    accent-color: var(--primary);
+    width: 18px;
+    height: 18px;
+}
+
+.controls-info {
+    margin-top: 2rem;
+    color: #888;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.controls-info p {
+    margin: 5px 0;
 }
 
 /* HUD Styling */
@@ -175,17 +212,22 @@ h1 {
     font-family: var(--retro-font);
     font-size: 1.5rem;
     margin-top: 5px;
+    color: var(--secondary);
+    text-shadow: 0 0 10px var(--secondary);
 }
 
 .dial .label {
     font-size: 0.6rem;
-    color: #888;
+    color: #aaa;
+    text-transform: uppercase;
 }
 
-#gear-val {
+.big-gear {
     font-family: var(--retro-font);
-    font-size: 2rem;
+    font-size: 2.5rem !important;
     color: var(--primary);
+    text-shadow: 0 0 15px var(--primary);
+    margin: 5px 0;
 }
 
 .center-hud {
