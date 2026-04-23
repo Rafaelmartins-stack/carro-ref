@@ -57,14 +57,19 @@ const Game = {
     },
 
     checkCollisions() {
-        const seg = Track.findSegment(Player.z);
+        // Check 400 units ahead (visual position of the car in pseudo-3D)
+        const collisionZ = Player.z + 400;
+        const seg = Track.findSegment(collisionZ);
+
         if (seg.cars.length > 0) {
             seg.cars.forEach(car => {
-                // Simplified collision check
-                if (Math.abs(Player.x - car.x) < 0.4) {
+                // Check if car is actually at the same Z-range and same X-lane
+                const carZ = car.z;
+                // AI cars z can be a bit off due to segment size, but checking segment assignments is safer
+                if (Math.abs(Player.x - car.x) < 0.5) {
                     // HIT!
                     Player.speed = 0;
-                    Player.z -= 100; // Bounce back
+                    Player.z -= 200; // Bounce back
                 }
             });
         }
@@ -142,7 +147,7 @@ const Game = {
 
         const scale = Engine.cameraDepth / Engine.cameraHeight;
         const destW = (scale * 2000 * (width / 2)) * 0.3; // Car width
-        const destH = destW * 1.1; // Car height (increased to avoid squashing)
+        const destH = destW * 1.4; // Corrected height to avoid squashing
         const destX = width / 2 - (destW / 2);
         const destY = height - destH - 10;
 

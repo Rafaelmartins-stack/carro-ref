@@ -127,10 +127,10 @@ const Engine = {
 
         // Procedural City Skyline (Parallax)
         const cityOffset = (offset || 0);
-        for (let i = -5; i < 15; i++) {
+        for (let i = -10; i < 20; i++) {
             const buildingW = 200;
             const buildingH = 150 + (Math.sin(i * 1.5) * 100);
-            const x = (i * buildingW) - (cityOffset % (buildingW * 20));
+            const x = (i * buildingW) - (cityOffset * 0.5 % (buildingW * 30));
             const y = this.height / 2 - buildingH;
 
             // Building Shadow
@@ -141,9 +141,15 @@ const Engine = {
             this.ctx.fillStyle = '#ffae00';
             for (let wx = x + 20; wx < x + buildingW - 30; wx += 30) {
                 for (let wy = y + 20; wy < y + buildingH - 20; wy += 40) {
-                    if (Math.sin(wx * wy) > 0) this.ctx.fillRect(wx, wy, 8, 8);
+                    if (Math.sin(wx * wy + (cityOffset / 100)) > 0.5) this.ctx.fillRect(wx, wy, 8, 8);
                 }
             }
+
+            // Grandstands (GP Stadium Feel)
+            this.ctx.fillStyle = '#1a1a2e';
+            const gx = x + (buildingW / 4);
+            const gy = this.height / 2 - 40;
+            this.ctx.fillRect(gx, gy, buildingW / 2, 40);
         }
     }
 };
