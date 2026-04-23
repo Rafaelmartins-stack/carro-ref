@@ -32,10 +32,23 @@ const Assets = {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // Remove white background (pure white or very close)
+        // Background removal (Chroma Key)
         for (let i = 0; i < data.length; i += 4) {
-            if (data[i] > 240 && data[i + 1] > 240 && data[i + 2] > 240) {
-                data[i + 3] = 0; // Set alpha to 0
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+
+            // Remove Magenta (#FF00FF)
+            if (r > 200 && g < 100 && b > 200) {
+                data[i + 3] = 0;
+            }
+            // Remove White/Light Gray (aggressive)
+            else if (r > 200 && g > 200 && b > 200) {
+                data[i + 3] = 0;
+            }
+            // Remove Checkerboard Gray (common in AI transparency)
+            else if (Math.abs(r - g) < 5 && Math.abs(g - b) < 5 && r > 180) {
+                data[i + 3] = 0;
             }
         }
 

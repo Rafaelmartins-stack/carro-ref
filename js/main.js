@@ -17,10 +17,7 @@ const Game = {
         UI.init();
 
         Assets.load({
-            'car': 'assets/car_straight.png',
-            'car_left': 'assets/car_left.png',
-            'car_right': 'assets/car_right.png',
-            'car_ai': 'assets/car_ai.png'
+            'car': 'assets/car.png'
         }, () => {
             console.log("Assets Loaded");
         });
@@ -102,8 +99,10 @@ const Game = {
     },
 
     renderEntities(segment) {
-        const aiImg = Assets.getImage('car_ai');
-        if (!aiImg) return;
+        const carImg = Assets.getImage('car');
+        if (!carImg) return;
+
+        const sheetW = carImg.width / 3;
 
         segment.cars.forEach(car => {
             const scale = segment.p1.screen.scale;
@@ -112,7 +111,12 @@ const Game = {
             const destX = segment.p1.screen.x + (scale * car.x * Engine.roadWidth * Engine.width / 2) - (destW / 2);
             const destY = segment.p1.screen.y - destH;
 
-            Engine.ctx.drawImage(aiImg, destX, destY, destW, destH);
+            // Use straight sprite for AI
+            Engine.ctx.drawImage(
+                carImg,
+                0, 0, sheetW, carImg.height,
+                destX, destY, destW, destH
+            );
         });
     },
 
@@ -127,14 +131,19 @@ const Game = {
         const destX = width / 2 - (destW / 2);
         const destY = height - destH - 40;
 
-        // Sprite Selection based on rotation
-        let spriteName = 'car';
-        if (Player.rotation < -0.05) spriteName = 'car_left';
-        if (Player.rotation > 0.05) spriteName = 'car_right';
-
-        const carImg = Assets.getImage(spriteName);
+        const carImg = Assets.getImage('car');
         if (carImg) {
-            ctx.drawImage(carImg, destX, destY, destW, destH);
+            // Sheet coordinates (1x3 sheet)
+            const sheetW = carImg.width / 3;
+            let offset = 0; // Straight
+            if (Player.rotation < -0.05) offset = 1; // Left
+            if (Player.rotation > 0.05) offset = 2; // Right
+
+            ctx.drawImage(
+                carImg,
+                offset * sheetW, 0, sheetW, carImg.height, // Source
+                destX, destY, destW, destH // Destination
+            );
         } else {
             ctx.fillStyle = '#ff0055';
             ctx.fillRect(destX, destY, destW, destH);
