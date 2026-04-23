@@ -118,23 +118,27 @@ const Game = {
 
     renderEntities(segment) {
         const carImg = Assets.getImage('car');
-        if (!carImg) return;
-
-        const sheetW = carImg.width / 3;
+        const sheetW = carImg ? carImg.width / 3 : 0;
 
         segment.cars.forEach(car => {
             const scale = segment.p1.screen.scale;
-            const destW = (scale * 2000 * (Engine.width / 2)) * 0.3;
-            const destH = destW * 0.6;
+            const destW = (scale * 2000 * (Engine.width / 2)) * 0.4;
+            const destH = destW * 0.8;
             const destX = segment.p1.screen.x + (scale * car.x * Engine.roadWidth * Engine.width / 2) - (destW / 2);
             const destY = segment.p1.screen.y - destH;
 
-            // Use straight sprite for AI
-            Engine.ctx.drawImage(
-                carImg,
-                0, 0, sheetW, carImg.height,
-                destX, destY, destW, destH
-            );
+            if (carImg) {
+                Engine.ctx.drawImage(
+                    carImg,
+                    0, 0, sheetW, carImg.height,
+                    destX, destY, destW, destH
+                );
+            }
+
+            // High-visibility Neon Border
+            Engine.ctx.strokeStyle = '#39ff14';
+            Engine.ctx.lineWidth = 3;
+            Engine.ctx.strokeRect(destX, destY, destW, destH);
         });
     },
 

@@ -38,4 +38,4 @@ const AI = {
     }
 };
 
-AI.init(19);
+AI.init(40);

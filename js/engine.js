@@ -110,46 +110,40 @@ const Engine = {
     },
 
     renderBackground(offset) {
-        // Sky Gradient
+        // High-Contrast Sky
         const grad = this.ctx.createLinearGradient(0, 0, 0, this.height / 2);
-        grad.addColorStop(0, '#001a33'); // Dark night sky
-        grad.addColorStop(1, '#660066'); // Purple sunset
+        grad.addColorStop(0, '#000000');
+        grad.addColorStop(1, '#1a1a2e');
         this.ctx.fillStyle = grad;
         this.ctx.fillRect(0, 0, this.width, this.height / 2);
 
-        // Stars
-        this.ctx.fillStyle = "#fff";
-        for (let i = 0; i < 30; i++) {
-            const x = (Math.abs(Math.sin(i * 123)) * this.width);
-            const y = (Math.abs(Math.cos(i * 456)) * this.height / 3);
-            this.ctx.fillRect(x, y, 1.5, 1.5);
-        }
-
-        // Procedural City Skyline (Parallax)
+        // Huge Neon Structures
         const cityOffset = (offset || 0);
-        for (let i = -15; i < 25; i++) {
-            const buildingW = 300;
-            const buildingH = 200 + (Math.sin(i * 2.2) * 150);
-            const x = (i * buildingW) - (cityOffset * 0.1 % (30 * buildingW));
-            const y = this.height / 2 - buildingH;
+        for (let i = -10; i < 20; i++) {
+            const bW = 500;
+            const bH = 250 + (Math.sin(i * 100) * 100);
+            const x = (i * bW) - (cityOffset * 0.1 % (30 * bW));
+            const y = this.height / 2 - bH;
 
-            // Building Body (Neon edges)
             this.ctx.fillStyle = '#050510';
-            this.ctx.fillRect(x, y, buildingW - 10, buildingH);
+            this.ctx.fillRect(x, y, bW - 20, bH);
+            this.ctx.strokeStyle = i % 2 === 0 ? '#00f2ff' : '#ff0055';
+            this.ctx.lineWidth = 3;
+            this.ctx.strokeRect(x, y, bW - 20, bH);
 
-            this.ctx.strokeStyle = '#00f2ff';
-            this.ctx.lineWidth = 1;
-            this.ctx.strokeRect(x, y, buildingW - 10, buildingH);
-
-            // Windows with randomized colors
-            for (let wx = x + 40; wx < x + buildingW - 40; wx += 50) {
-                for (let wy = y + 40; wy < y + buildingH - 40; wy += 60) {
-                    if (Math.sin(wx + wy + (cityOffset / 50)) > 0.4) {
-                        this.ctx.fillStyle = (wx + wy) % 2 === 0 ? '#ff0055' : '#00f2ff';
-                        this.ctx.fillRect(wx, wy, 15, 12);
-                    }
+            // Large Window Blocks
+            this.ctx.fillStyle = '#fff';
+            if (i % 3 === 0) {
+                for (let wy = y + 20; wy < y + bH - 20; wy += 50) {
+                    this.ctx.fillRect(x + 20, wy, 20, 10);
                 }
             }
+        }
+
+        // Stars/Lights
+        this.ctx.fillStyle = '#fff';
+        for (let i = 0; i < 100; i++) {
+            this.ctx.fillRect(Math.abs(Math.sin(i)) * this.width, Math.abs(Math.cos(i)) * this.height / 3, 2, 2);
         }
     }
 };
