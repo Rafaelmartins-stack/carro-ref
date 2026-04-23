@@ -127,29 +127,29 @@ const Engine = {
 
         // Procedural City Skyline (Parallax)
         const cityOffset = (offset || 0);
-        for (let i = -10; i < 20; i++) {
-            const buildingW = 200;
-            const buildingH = 150 + (Math.sin(i * 1.5) * 100);
-            const x = (i * buildingW) - (cityOffset * 0.5 % (buildingW * 30));
+        for (let i = -15; i < 25; i++) {
+            const buildingW = 300;
+            const buildingH = 200 + (Math.sin(i * 2.2) * 150);
+            const x = (i * buildingW) - (cityOffset * 0.1 % (30 * buildingW));
             const y = this.height / 2 - buildingH;
 
-            // Building Shadow
-            this.ctx.fillStyle = '#0a0a14';
+            // Building Body (Neon edges)
+            this.ctx.fillStyle = '#050510';
             this.ctx.fillRect(x, y, buildingW - 10, buildingH);
 
-            // Windows
-            this.ctx.fillStyle = '#ffae00';
-            for (let wx = x + 20; wx < x + buildingW - 30; wx += 30) {
-                for (let wy = y + 20; wy < y + buildingH - 20; wy += 40) {
-                    if (Math.sin(wx * wy + (cityOffset / 100)) > 0.5) this.ctx.fillRect(wx, wy, 8, 8);
+            this.ctx.strokeStyle = '#00f2ff';
+            this.ctx.lineWidth = 1;
+            this.ctx.strokeRect(x, y, buildingW - 10, buildingH);
+
+            // Windows with randomized colors
+            for (let wx = x + 40; wx < x + buildingW - 40; wx += 50) {
+                for (let wy = y + 40; wy < y + buildingH - 40; wy += 60) {
+                    if (Math.sin(wx + wy + (cityOffset / 50)) > 0.4) {
+                        this.ctx.fillStyle = (wx + wy) % 2 === 0 ? '#ff0055' : '#00f2ff';
+                        this.ctx.fillRect(wx, wy, 15, 12);
+                    }
                 }
             }
-
-            // Grandstands (GP Stadium Feel)
-            this.ctx.fillStyle = '#1a1a2e';
-            const gx = x + (buildingW / 4);
-            const gy = this.height / 2 - 40;
-            this.ctx.fillRect(gx, gy, buildingW / 2, 40);
         }
     }
 };

@@ -79,19 +79,17 @@ const Game = {
         const ctx = Engine.ctx;
         ctx.clearRect(0, 0, Engine.width, Engine.height);
 
-        Engine.renderBackground(Player.z / 10); // Parallax offset based on distance
+        Engine.renderBackground(Player.z / 10);
 
         const baseSegment = Track.findSegment(Player.z);
         const percent = Utils.percentRemaining(Player.z, Engine.segmentLength);
         const playerPercent = Utils.percentRemaining(Player.z + Engine.cameraHeight * Engine.cameraDepth, Engine.segmentLength);
         const playerY = Utils.interpolate(baseSegment.p1.world.y, baseSegment.p2.world.y, playerPercent);
 
-        let maxY = Engine.height;
         let x = 0;
         let dx = -(baseSegment.curve * percent);
 
-        // Render road segments from back to front (but actually front to back for painters algorithm simplified)
-        // Actually, we usually render from front to back to handle occlusion, but for pseudo-3d we render segments.
+        // --- PHASE 1: Project all segments ---
         for (let n = 0; n < Engine.drawDistance; n++) {
             const segment = Track.segments[(baseSegment.index + n) % Track.segments.length];
             segment.looped = segment.index < baseSegment.index;
@@ -102,19 +100,19 @@ const Game = {
 
             x = x + dx;
             dx = dx + segment.curve;
-
-            if ((segment.p1.camera.z <= Engine.cameraDepth) || (segment.p2.screen.y >= maxY))
-                continue;
-
-            Engine.renderSegment(segment);
-
-            // Render entities on this segment
-            this.renderEntities(segment);
-
-            maxY = segment.p2.screen.y;
         }
 
-        // Render Player Car (Simplified sprite for now)
+        // --- PHASE 2: Render from BACK to FRONT ---
+        for (let n = Engine.drawDistance - 1; n >= 0; n--) {
+            const segment = Track.segments[(baseSegment.index + n) % Track.segments.length];
+
+            // Only render if within Z vision
+            if (segment.p1.camera.z <= Engine.cameraDepth) continue;
+
+            Engine.renderSegment(segment);
+            this.renderEntities(segment);
+        }
+
         this.renderPlayer();
     },
 
